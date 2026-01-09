@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
         {
             victoryPanel.SetActive(true);
             if (victoryText != null)
-                victoryText.text = "Congratulations! You found all " + totalTreasures + " treasures!";
+                victoryText.text = "Congratulations !!! \n You found all " + totalTreasures + "\n Treasures !!!";
         }
         Debug.Log("Game Won! All treasures found!");
     }

@@ -64,7 +64,11 @@ public class TreasureTracker : MonoBehaviour
         
         foreach (TreasureCube treasure in treasures)
         {
-            allTreasures.Add(treasure.gameObject);
+            // Only add treasures that haven't been collected yet
+            if (treasure != null && !treasure.IsCollected)
+            {
+                allTreasures.Add(treasure.gameObject);
+            }
         }
     }
 
@@ -142,15 +146,6 @@ public class TreasureTracker : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(updateInterval);
-        }
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (nearestTreasure != null && arCamera != null)
-        {
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawLine(arCamera.transform.position, nearestTreasure.transform.position);
         }
     }
 }

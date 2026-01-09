@@ -11,10 +11,6 @@ public class TreasureCube : MonoBehaviour
     [SerializeField] private float bobSpeed = 1f;
     [SerializeField] private float bobHeight = 0.2f;
 
-    [Header("Particle Effects")]
-    [SerializeField] private ParticleSystem collectEffect;
-    [SerializeField] private ParticleSystem glowEffect;
-
     [Header("Audio")]
     [SerializeField] private AudioClip collectSound;
     [SerializeField] private AudioSource audioSource;
@@ -29,6 +25,9 @@ public class TreasureCube : MonoBehaviour
     private Renderer treasureRenderer;
     private bool isHighlighted = false;
 
+    // Public property to check if collected
+    public bool IsCollected => isCollected;
+
     void Start()
     {
         arCamera = Camera.main;
@@ -38,11 +37,6 @@ public class TreasureCube : MonoBehaviour
         if (audioSource == null)
         {
             audioSource = gameObject.AddComponent<AudioSource>();
-        }
-
-        if (glowEffect != null)
-        {
-            glowEffect.Play();
         }
 
         // Ensure the treasure has a collider for clicking
@@ -136,13 +130,6 @@ public class TreasureCube : MonoBehaviour
 
         isCollected = true;
 
-        // Play collection effect
-        if (collectEffect != null)
-        {
-            ParticleSystem effect = Instantiate(collectEffect, transform.position, Quaternion.identity);
-            Destroy(effect.gameObject, 2f);
-        }
-
         // Play sound
         if (audioSource != null && collectSound != null)
         {
@@ -186,16 +173,5 @@ public class TreasureCube : MonoBehaviour
         {
             CollectTreasure();
         }
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        // Draw collection distance
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, collectionDistance);
-
-        // Draw highlight distance
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, highlightDistance);
     }
 }

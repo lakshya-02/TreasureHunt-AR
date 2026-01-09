@@ -12,81 +12,49 @@ public class ARTreasureSpawner : MonoBehaviour
     [SerializeField] private ARPlaneManager arPlaneManager;
     [SerializeField] private Camera arCamera;
 
-    [Header("Fallback Settings")]
-    [SerializeField] private bool enableSimulationMode = true;
-    [SerializeField] private float simulationPlaneY = 0f;
-
     [Header("Treasure Prefab")]
     [SerializeField] private GameObject treasurePrefab;
 
     [Header("Spawn Settings")]
-    [SerializeField] private float spawnDelay = 2f;
+    //[SerializeField] private float spawnDelay = 2f;
     [SerializeField] private float minHeight = 0.1f;
     [SerializeField] private float maxHeight = 0.5f;
+    [SerializeField] private float planeDetectionTimeout = 3f; // Timeout for plane detection
 
     private List<ARAnchor> spawnedAnchors = new List<ARAnchor>();
     private int treasuresSpawned = 0;
-    //private bool canSpawn = false;
+    private bool useDirectPlacement = false;
 
     void Start()
     {
         if (arCamera == null)
             arCamera = Camera.main;
 
-        // Check if we're in editor/simulation mode
-        bool isSimulation = Application.isEditor || !IsARSupported();
-        
-        if (isSimulation && enableSimulationMode)
-        {
-            Debug.Log("Running in simulation mode - bypassing plane detection");
-            StartCoroutine(SimulationSpawnDelay());
-        }
-        else
-        {
-            StartCoroutine(WaitForPlaneDetection());
-        }
-    }
-
-    private bool IsARSupported()
-    {
-        return arRaycastManager != null && arPlaneManager != null && 
-               arRaycastManager.enabled && arPlaneManager.enabled;
-    }
-
-    private IEnumerator SimulationSpawnDelay()
-    {
-        // Small delay to ensure everything is initialized
-        yield return new WaitForSeconds(0.5f);
-        Debug.Log("Starting simulation treasure spawn...");
-        StartCoroutine(SpawnTreasures());
+        StartCoroutine(WaitForPlaneDetection());
     }
 
     private IEnumerator WaitForPlaneDetection()
     {
-        // Add timeout for plane detection
-        float timeout = 10f;
         float elapsed = 0f;
         
         // Wait until at least one plane is detected or timeout
-        while ((arPlaneManager == null || arPlaneManager.trackables.count == 0) && elapsed < timeout)
+        while ((arPlaneManager == null || arPlaneManager.trackables.count == 0) && elapsed < planeDetectionTimeout)
         {
             elapsed += Time.deltaTime;
             yield return null;
         }
         
-        if (elapsed >= timeout)
+        if (elapsed >= planeDetectionTimeout)
         {
-            Debug.LogWarning("Plane detection timeout - switching to simulation mode");
-            if (enableSimulationMode)
-            {
-                StartCoroutine(SpawnTreasures());
-                yield break;
-            }
+            Debug.LogWarning("AR Plane detection timeout - using direct placement mode");
+            useDirectPlacement = true;
         }
-        
-        Debug.Log("Planes detected. Starting treasure spawn...");
+        else
+        {
+            Debug.Log("AR Planes detected. Starting treasure spawn...");
+        }
 
-        // Wait a bit for plane stabilization
+        // Wait a bit for stabilization
         yield return new WaitForSeconds(1f);
 
         StartCoroutine(SpawnTreasures());
@@ -97,6 +65,7 @@ public class ARTreasureSpawner : MonoBehaviour
         int totalTreasures = GameManager.Instance.GetTotalTreasures();
         float spawnRadius = GameManager.Instance.GetSpawnRadius();
 
+        // Spawn all treasures at once
         while (treasuresSpawned < totalTreasures)
         {
             Vector3 randomPosition = GetRandomPositionAroundPlayer(spawnRadius);
@@ -107,7 +76,8 @@ public class ARTreasureSpawner : MonoBehaviour
                 Debug.Log($"Treasure {treasuresSpawned}/{totalTreasures} spawned!");
             }
 
-            yield return new WaitForSeconds(spawnDelay);
+            // No delay - spawn all immediately
+            yield return null;
         }
 
         Debug.Log("All treasures spawned!");
@@ -129,13 +99,10 @@ public class ARTreasureSpawner : MonoBehaviour
 
     private bool TryPlaceAnchorAtPosition(Vector3 targetPosition)
     {
-        // Check if we should use simulation mode
-        bool useSimulation = Application.isEditor || !IsARSupported() || 
-                           (arRaycastManager != null && !arRaycastManager.enabled);
-                           
-        if (useSimulation && enableSimulationMode)
+        // If using direct placement (no AR planes detected), place directly
+        if (useDirectPlacement)
         {
-            return TryPlaceAnchorSimulation(targetPosition);
+            return TryDirectPlacement(targetPosition);
         }
         
         List<ARRaycastHit> hits = new List<ARRaycastHit>();
@@ -164,12 +131,12 @@ public class ARTreasureSpawner : MonoBehaviour
         return false;
     }
 
-    private bool TryPlaceAnchorSimulation(Vector3 targetPosition)
+    private bool TryDirectPlacement(Vector3 targetPosition)
     {
-        // Simulate placing on a ground plane
-        Vector3 groundPosition = new Vector3(targetPosition.x, simulationPlaneY, targetPosition.z);
+        // Place at ground level (Y=0) for fallback
+        Vector3 groundPosition = new Vector3(targetPosition.x, 0f, targetPosition.z);
         
-        // Check if position is valid (not too close to other treasures)
+        // Check if position is valid
         if (!GameManager.Instance.IsValidSpawnPosition(groundPosition))
         {
             return false;
@@ -184,16 +151,15 @@ public class ARTreasureSpawner : MonoBehaviour
 
     private bool CreateAnchorAndTreasure(Vector3 position, Quaternion rotation)
     {
-        // Create anchor using the new method
+        // Create anchor
         GameObject anchorObject = new GameObject("TreasureAnchor");
         anchorObject.transform.position = position;
         anchorObject.transform.rotation = rotation;
         
-        // Only add ARAnchor if AR is supported
-        ARAnchor anchor = null;
-        if (IsARSupported() && !Application.isEditor)
+        // Only add ARAnchor if not in direct placement mode
+        if (!useDirectPlacement && arAnchorManager != null)
         {
-            anchor = anchorObject.AddComponent<ARAnchor>();
+            ARAnchor anchor = anchorObject.AddComponent<ARAnchor>();
             if (anchor != null)
             {
                 spawnedAnchors.Add(anchor);
