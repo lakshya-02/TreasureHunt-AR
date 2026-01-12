@@ -8,17 +8,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 710431710954383305, guid: 3436666edc1b8e04bbbacd5eac81d1e0, type: 3}
-      propertyPath: collectSound
-      value: 
-      objectReference: {fileID: 8300000, guid: c9b5b65086dcb8a4dbaf579c21414b3f, type: 3}
     - target: {fileID: 3723225659104041235, guid: 3436666edc1b8e04bbbacd5eac81d1e0, type: 3}
       propertyPath: m_Name
       value: TC Variant
-      objectReference: {fileID: 0}
-    - target: {fileID: 3723225659104041235, guid: 3436666edc1b8e04bbbacd5eac81d1e0, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4098379763250643881, guid: 3436666edc1b8e04bbbacd5eac81d1e0, type: 3}
       propertyPath: m_LocalPosition.x

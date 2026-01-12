@@ -166,9 +166,10 @@ public class ARTreasureSpawner : MonoBehaviour
             }
         }
         
-        // Instantiate treasure at anchor position
-        GameObject treasure = Instantiate(treasurePrefab, position, Quaternion.identity);
-        treasure.transform.SetParent(anchorObject.transform);
+        // Instantiate treasure as child of anchor with local position zero
+        GameObject treasure = Instantiate(treasurePrefab, anchorObject.transform);
+        treasure.transform.localPosition = Vector3.zero;
+        treasure.transform.localRotation = Quaternion.identity;
         
         // Ensure treasure has proper setup for interaction
         SetupTreasureForInteraction(treasure);

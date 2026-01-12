@@ -12,12 +12,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int totalTreasures = 5;
     [SerializeField] private float spawnRadius = 10f; // Radius around player to spawn treasures
     [SerializeField] private float minDistanceBetweenTreasures = 2f;
+    [SerializeField] private float victoryUIDelay = 2f; // Delay before showing victory UI
 
     [Header("UI References")]
-    [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI treasureCountText;
-    [SerializeField] private GameObject victoryPanel;
-    [SerializeField] private TextMeshProUGUI victoryText;
+    [SerializeField] private GameObject victoryUI;
+    [SerializeField] private GameObject[] otherUIElements; // All other UI elements to hide
 
     private int treasuresFound = 0;
     private List<Vector3> spawnedPositions = new List<Vector3>();
@@ -37,8 +37,10 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         UpdateUI();
-        if (victoryPanel != null)
-            victoryPanel.SetActive(false);
+        
+        // Hide victory UI at start
+        if (victoryUI != null)
+            victoryUI.SetActive(false);
     }
 
     public void OnTreasureFound()
@@ -54,22 +56,32 @@ public class GameManager : MonoBehaviour
 
     private void UpdateUI()
     {
-        if (scoreText != null)
-            scoreText.text = "Score: " + treasuresFound;
-
         if (treasureCountText != null)
-            treasureCountText.text = treasuresFound + " / " + totalTreasures;
+            treasureCountText.text = $"{treasuresFound} / {totalTreasures}";
     }
 
     private void GameWon()
     {
-        if (victoryPanel != null)
+        StartCoroutine(ShowVictoryUIWithDelay());
+    }
+
+    private IEnumerator ShowVictoryUIWithDelay()
+    {
+        Debug.Log("Congratulations! All treasures found!");
+        
+        // Wait for the specified delay
+        yield return new WaitForSeconds(victoryUIDelay);
+        
+        // Show victory UI
+        if (victoryUI != null)
+            victoryUI.SetActive(true);
+        
+        // Hide all other UI elements
+        foreach (GameObject uiElement in otherUIElements)
         {
-            victoryPanel.SetActive(true);
-            if (victoryText != null)
-                victoryText.text = "Congratulations !!! \n You found all " + totalTreasures + "\n Treasures !!!";
+            if (uiElement != null)
+                uiElement.SetActive(false);
         }
-        Debug.Log("Game Won! All treasures found!");
     }
 
     public bool IsValidSpawnPosition(Vector3 position)
@@ -104,5 +116,15 @@ public class GameManager : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene(
             UnityEngine.SceneManagement.SceneManager.GetActiveScene().name
         );
+    }
+
+    public void ExitGame()
+    {
+        Debug.Log("Exiting game...");
+        Application.Quit();
+        
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        #endif
     }
 }

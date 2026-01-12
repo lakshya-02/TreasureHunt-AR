@@ -246,8 +246,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   totalTreasures: 5
-  spawnRadius: 10
-  minDistanceBetweenTreasures: 5
+  spawnRadius: 7
+  minDistanceBetweenTreasures: 4
+  victoryUIDelay: 1
   treasureCountText: {fileID: 1564927349}
   victoryUI: {fileID: 408989811}
   otherUIElements:
@@ -983,6 +984,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   directionArrow: {fileID: 2039649453}
   distanceText: {fileID: 1308905757}
+  trackerUI: {fileID: 0}
   updateInterval: 0.4
   showDistance: 1
   showDirection: 1
@@ -1810,7 +1812,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e74f1b4dc677dae4cbd421ce6e6b3716, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8e2887a8fbd83ca41945d94ffec8ed12, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

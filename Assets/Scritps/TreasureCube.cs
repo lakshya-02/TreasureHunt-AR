@@ -21,6 +21,7 @@ public class TreasureCube : MonoBehaviour
 
     private Camera arCamera;
     private Vector3 startPosition;
+    private Vector3 localStartPosition;
     private bool isCollected = false;
     private Renderer treasureRenderer;
     private bool isHighlighted = false;
@@ -32,6 +33,7 @@ public class TreasureCube : MonoBehaviour
     {
         arCamera = Camera.main;
         startPosition = transform.position;
+        localStartPosition = transform.localPosition;
         treasureRenderer = GetComponent<Renderer>();
 
         if (audioSource == null)
@@ -66,9 +68,9 @@ public class TreasureCube : MonoBehaviour
         // Rotate the treasure
         transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
 
-        // Bob up and down
-        float newY = startPosition.y + Mathf.Sin(Time.time * bobSpeed) * bobHeight;
-        transform.position = new Vector3(transform.position.x, newY, transform.position.z);
+        // Bob up and down using LOCAL position to maintain AR anchor
+        float bobOffset = Mathf.Sin(Time.time * bobSpeed) * bobHeight;
+        transform.localPosition = new Vector3(localStartPosition.x, localStartPosition.y + bobOffset, localStartPosition.z);
 
         // Check distance to player
         if (arCamera != null)

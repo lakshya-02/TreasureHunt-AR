@@ -9,8 +9,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 9d658f52f73f9314687e1a8d34a9db11, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.75
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9d658f52f73f9314687e1a8d34a9db11, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2.75
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9d658f52f73f9314687e1a8d34a9db11, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.75
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9d658f52f73f9314687e1a8d34a9db11, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.53563464
+      value: 1.7213483
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9d658f52f73f9314687e1a8d34a9db11, type: 3}
       propertyPath: m_LocalPosition.y
@@ -18,7 +30,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9d658f52f73f9314687e1a8d34a9db11, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.7245522
+      value: 6.2279263
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9d658f52f73f9314687e1a8d34a9db11, type: 3}
       propertyPath: m_LocalRotation.w
@@ -47,6 +59,10 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 9d658f52f73f9314687e1a8d34a9db11, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9d658f52f73f9314687e1a8d34a9db11, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -6508526734932073117, guid: 9d658f52f73f9314687e1a8d34a9db11, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -110,9 +126,7 @@ MonoBehaviour:
   rotationSpeed: 50
   bobSpeed: 1
   bobHeight: 0.2
-  collectEffect: {fileID: 0}
-  glowEffect: {fileID: 0}
-  collectSound: {fileID: 0}
+  collectSound: {fileID: 8300000, guid: c9b5b65086dcb8a4dbaf579c21414b3f, type: 3}
   audioSource: {fileID: 0}
   collectionDistance: 1.5
   highlightDistance: 3

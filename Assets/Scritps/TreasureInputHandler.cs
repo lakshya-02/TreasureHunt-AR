@@ -9,6 +9,9 @@ public class TreasureInputHandler : MonoBehaviour
     [SerializeField] private Camera arCamera;
     [SerializeField] private float maxRaycastDistance = 20f;
     [SerializeField] private LayerMask treasureLayer;
+    
+    [Header("Debug")]
+    [SerializeField] private bool showDebugRays = true;
 
     private void Start()
     {
@@ -23,20 +26,46 @@ public class TreasureInputHandler : MonoBehaviour
         // Handle mouse input (for editor)
         if (Input.GetMouseButtonDown(0))
         {
+            // Check if clicking on UI first
+            if (IsPointerOverUIObject())
+            {
+                return; // Don't process if clicking UI
+            }
+            
             HandleClick(Input.mousePosition);
         }
 
         // Handle touch input (for mobile)
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        if (Input.touchCount > 0)
         {
-            // Check if touching UI
-            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
-            {
-                return; // Don't process if touching UI
-            }
+            Touch touch = Input.GetTouch(0);
             
-            HandleClick(Input.GetTouch(0).position);
+            if (touch.phase == TouchPhase.Began)
+            {
+                // Check if touching UI
+                if (IsPointerOverUIObject(touch.fingerId))
+                {
+                    return; // Don't process if touching UI
+                }
+                
+                HandleClick(touch.position);
+            }
         }
+    }
+
+    private bool IsPointerOverUIObject(int fingerId = -1)
+    {
+        if (EventSystem.current == null)
+            return false;
+
+        // For touch input
+        if (fingerId >= 0)
+        {
+            return EventSystem.current.IsPointerOverGameObject(fingerId);
+        }
+        
+        // For mouse input
+        return EventSystem.current.IsPointerOverGameObject();
     }
 
     private void HandleClick(Vector3 screenPosition)
@@ -47,21 +76,30 @@ public class TreasureInputHandler : MonoBehaviour
             return;
         }
 
-        // Check if clicking on UI (for mouse input)
-        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
-        {
-            return;
-        }
-
         Ray ray = arCamera.ScreenPointToRay(screenPosition);
         RaycastHit hit;
 
-        // Raycast to find treasures
-        if (Physics.Raycast(ray, out hit, maxRaycastDistance))
+        if (showDebugRays)
         {
-            TreasureCube treasure = hit.collider.GetComponent<TreasureCube>();
-            if (treasure != null)
+            Debug.DrawRay(ray.origin, ray.direction * maxRaycastDistance, Color.yellow, 1f);
+        }
+
+        // Raycast to find treasures - ignore layer mask if not set
+        bool hitSomething = (treasureLayer.value == 0) 
+            ? Physics.Raycast(ray, out hit, maxRaycastDistance)
+            : Physics.Raycast(ray, out hit, maxRaycastDistance, treasureLayer);
+        
+        if (hitSomething)
+        {
+            if (showDebugRays)
             {
+                Debug.Log($"Hit: {hit.collider.gameObject.name} at distance {hit.distance}");
+            }
+            
+            TreasureCube treasure = hit.collider.GetComponent<TreasureCube>();
+            if (treasure != null && !treasure.IsCollected)
+            {
+                Debug.Log($"Collecting treasure: {hit.collider.gameObject.name}");
                 treasure.CollectTreasure();
             }
         }
