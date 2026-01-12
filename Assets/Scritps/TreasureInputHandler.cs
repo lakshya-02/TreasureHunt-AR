@@ -23,29 +23,25 @@ public class TreasureInputHandler : MonoBehaviour
 
     void Update()
     {
-        // Handle mouse input (for editor)
         if (Input.GetMouseButtonDown(0))
         {
-            // Check if clicking on UI first
             if (IsPointerOverUIObject())
             {
-                return; // Don't process if clicking UI
+                return;
             }
             
             HandleClick(Input.mousePosition);
         }
 
-        // Handle touch input (for mobile)
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
             
             if (touch.phase == TouchPhase.Began)
             {
-                // Check if touching UI
                 if (IsPointerOverUIObject(touch.fingerId))
                 {
-                    return; // Don't process if touching UI
+                    return;
                 }
                 
                 HandleClick(touch.position);
@@ -58,13 +54,11 @@ public class TreasureInputHandler : MonoBehaviour
         if (EventSystem.current == null)
             return false;
 
-        // For touch input
         if (fingerId >= 0)
         {
             return EventSystem.current.IsPointerOverGameObject(fingerId);
         }
         
-        // For mouse input
         return EventSystem.current.IsPointerOverGameObject();
     }
 
@@ -72,7 +66,6 @@ public class TreasureInputHandler : MonoBehaviour
     {
         if (arCamera == null)
         {
-            Debug.LogWarning("AR Camera not assigned!");
             return;
         }
 
@@ -84,22 +77,15 @@ public class TreasureInputHandler : MonoBehaviour
             Debug.DrawRay(ray.origin, ray.direction * maxRaycastDistance, Color.yellow, 1f);
         }
 
-        // Raycast to find treasures - ignore layer mask if not set
         bool hitSomething = (treasureLayer.value == 0) 
             ? Physics.Raycast(ray, out hit, maxRaycastDistance)
             : Physics.Raycast(ray, out hit, maxRaycastDistance, treasureLayer);
         
         if (hitSomething)
         {
-            if (showDebugRays)
-            {
-                Debug.Log($"Hit: {hit.collider.gameObject.name} at distance {hit.distance}");
-            }
-            
             TreasureCube treasure = hit.collider.GetComponent<TreasureCube>();
             if (treasure != null && !treasure.IsCollected)
             {
-                Debug.Log($"Collecting treasure: {hit.collider.gameObject.name}");
                 treasure.CollectTreasure();
             }
         }

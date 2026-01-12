@@ -10,14 +10,14 @@ public class GameManager : MonoBehaviour
 
     [Header("Game Settings")]
     [SerializeField] private int totalTreasures = 5;
-    [SerializeField] private float spawnRadius = 10f; // Radius around player to spawn treasures
+    [SerializeField] private float spawnRadius = 10f;
     [SerializeField] private float minDistanceBetweenTreasures = 2f;
-    [SerializeField] private float victoryUIDelay = 2f; // Delay before showing victory UI
+    [SerializeField] private float victoryUIDelay = 2f;
 
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI treasureCountText;
     [SerializeField] private GameObject victoryUI;
-    [SerializeField] private GameObject[] otherUIElements; // All other UI elements to hide
+    [SerializeField] private GameObject[] otherUIElements;
 
     private int treasuresFound = 0;
     private List<Vector3> spawnedPositions = new List<Vector3>();
@@ -38,7 +38,6 @@ public class GameManager : MonoBehaviour
     {
         UpdateUI();
         
-        // Hide victory UI at start
         if (victoryUI != null)
             victoryUI.SetActive(false);
     }
@@ -67,16 +66,11 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator ShowVictoryUIWithDelay()
     {
-        Debug.Log("Congratulations! All treasures found!");
-        
-        // Wait for the specified delay
         yield return new WaitForSeconds(victoryUIDelay);
         
-        // Show victory UI
         if (victoryUI != null)
             victoryUI.SetActive(true);
         
-        // Hide all other UI elements
         foreach (GameObject uiElement in otherUIElements)
         {
             if (uiElement != null)
@@ -120,7 +114,6 @@ public class GameManager : MonoBehaviour
 
     public void ExitGame()
     {
-        Debug.Log("Exiting game...");
         Application.Quit();
         
         #if UNITY_EDITOR

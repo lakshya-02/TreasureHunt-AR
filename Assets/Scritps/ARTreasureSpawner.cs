@@ -16,10 +16,9 @@ public class ARTreasureSpawner : MonoBehaviour
     [SerializeField] private GameObject treasurePrefab;
 
     [Header("Spawn Settings")]
-    //[SerializeField] private float spawnDelay = 2f;
     [SerializeField] private float minHeight = 0.1f;
     [SerializeField] private float maxHeight = 0.5f;
-    [SerializeField] private float planeDetectionTimeout = 3f; // Timeout for plane detection
+    [SerializeField] private float planeDetectionTimeout = 3f;
 
     private List<ARAnchor> spawnedAnchors = new List<ARAnchor>();
     private int treasuresSpawned = 0;
@@ -37,7 +36,6 @@ public class ARTreasureSpawner : MonoBehaviour
     {
         float elapsed = 0f;
         
-        // Wait until at least one plane is detected or timeout
         while ((arPlaneManager == null || arPlaneManager.trackables.count == 0) && elapsed < planeDetectionTimeout)
         {
             elapsed += Time.deltaTime;
@@ -46,15 +44,9 @@ public class ARTreasureSpawner : MonoBehaviour
         
         if (elapsed >= planeDetectionTimeout)
         {
-            Debug.LogWarning("AR Plane detection timeout - using direct placement mode");
             useDirectPlacement = true;
         }
-        else
-        {
-            Debug.Log("AR Planes detected. Starting treasure spawn...");
-        }
 
-        // Wait a bit for stabilization
         yield return new WaitForSeconds(1f);
 
         StartCoroutine(SpawnTreasures());
@@ -65,7 +57,6 @@ public class ARTreasureSpawner : MonoBehaviour
         int totalTreasures = GameManager.Instance.GetTotalTreasures();
         float spawnRadius = GameManager.Instance.GetSpawnRadius();
 
-        // Spawn all treasures at once
         while (treasuresSpawned < totalTreasures)
         {
             Vector3 randomPosition = GetRandomPositionAroundPlayer(spawnRadius);
@@ -73,21 +64,16 @@ public class ARTreasureSpawner : MonoBehaviour
             if (TryPlaceAnchorAtPosition(randomPosition))
             {
                 treasuresSpawned++;
-                Debug.Log($"Treasure {treasuresSpawned}/{totalTreasures} spawned!");
             }
 
-            // No delay - spawn all immediately
             yield return null;
         }
-
-        Debug.Log("All treasures spawned!");
     }
 
     private Vector3 GetRandomPositionAroundPlayer(float radius)
     {
         Vector3 playerPosition = arCamera.transform.position;
         
-        // Generate random position in a circle around the player
         float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
         float distance = Random.Range(radius * 0.3f, radius);
         
@@ -99,7 +85,6 @@ public class ARTreasureSpawner : MonoBehaviour
 
     private bool TryPlaceAnchorAtPosition(Vector3 targetPosition)
     {
-        // If using direct placement (no AR planes detected), place directly
         if (useDirectPlacement)
         {
             return TryDirectPlacement(targetPosition);
@@ -107,7 +92,6 @@ public class ARTreasureSpawner : MonoBehaviour
         
         List<ARRaycastHit> hits = new List<ARRaycastHit>();
         
-        // Raycast from above the target position downward
         Vector3 rayOrigin = new Vector3(targetPosition.x, targetPosition.y + 5f, targetPosition.z);
         Vector3 rayDirection = Vector3.down;
 
@@ -115,13 +99,11 @@ public class ARTreasureSpawner : MonoBehaviour
         {
             Pose hitPose = hits[0].pose;
             
-            // Check if position is valid (not too close to other treasures)
             if (!GameManager.Instance.IsValidSpawnPosition(hitPose.position))
             {
                 return false;
             }
 
-            // Adjust height slightly
             Vector3 spawnPosition = hitPose.position;
             spawnPosition.y += Random.Range(minHeight, maxHeight);
 
@@ -133,16 +115,13 @@ public class ARTreasureSpawner : MonoBehaviour
 
     private bool TryDirectPlacement(Vector3 targetPosition)
     {
-        // Place at ground level (Y=0) for fallback
         Vector3 groundPosition = new Vector3(targetPosition.x, 0f, targetPosition.z);
         
-        // Check if position is valid
         if (!GameManager.Instance.IsValidSpawnPosition(groundPosition))
         {
             return false;
         }
 
-        // Adjust height slightly
         Vector3 spawnPosition = groundPosition;
         spawnPosition.y += Random.Range(minHeight, maxHeight);
 
@@ -151,12 +130,10 @@ public class ARTreasureSpawner : MonoBehaviour
 
     private bool CreateAnchorAndTreasure(Vector3 position, Quaternion rotation)
     {
-        // Create anchor
         GameObject anchorObject = new GameObject("TreasureAnchor");
         anchorObject.transform.position = position;
         anchorObject.transform.rotation = rotation;
         
-        // Only add ARAnchor if not in direct placement mode
         if (!useDirectPlacement && arAnchorManager != null)
         {
             ARAnchor anchor = anchorObject.AddComponent<ARAnchor>();
@@ -166,24 +143,19 @@ public class ARTreasureSpawner : MonoBehaviour
             }
         }
         
-        // Instantiate treasure as child of anchor with local position zero
         GameObject treasure = Instantiate(treasurePrefab, anchorObject.transform);
         treasure.transform.localPosition = Vector3.zero;
         treasure.transform.localRotation = Quaternion.identity;
         
-        // Ensure treasure has proper setup for interaction
         SetupTreasureForInteraction(treasure);
         
-        // Register position with game manager
         GameManager.Instance.RegisterSpawnPosition(position);
         
-        Debug.Log($"Treasure spawned at position: {position}");
         return true;
     }
 
     private void SetupTreasureForInteraction(GameObject treasure)
     {
-        // Ensure the treasure has a collider
         Collider col = treasure.GetComponent<Collider>();
         if (col == null)
         {
@@ -192,13 +164,10 @@ public class ARTreasureSpawner : MonoBehaviour
         
         if (col == null)
         {
-            // Add a sphere collider as fallback
             SphereCollider sphereCol = treasure.AddComponent<SphereCollider>();
             sphereCol.radius = 0.5f;
-            Debug.Log($"Added SphereCollider to treasure: {treasure.name}");
         }
         
-        // Make sure collider is enabled
         if (col != null)
         {
             col.enabled = true;

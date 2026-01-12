@@ -100,5 +100,6 @@ InitTestScene*.unity*
 
 # Custom folders to ignore
 /[Aa]ssets/ERP/
+/[Aa]ssets/Images/
 .vscode/
 /md/

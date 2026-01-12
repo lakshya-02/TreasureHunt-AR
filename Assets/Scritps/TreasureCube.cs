@@ -26,7 +26,6 @@ public class TreasureCube : MonoBehaviour
     private Renderer treasureRenderer;
     private bool isHighlighted = false;
 
-    // Public property to check if collected
     public bool IsCollected => isCollected;
 
     void Start()
@@ -52,7 +51,6 @@ public class TreasureCube : MonoBehaviour
         {
             // Add a box collider if none exists
             BoxCollider boxCol = gameObject.AddComponent<BoxCollider>();
-            Debug.Log($"Added BoxCollider to {gameObject.name}");
         }
         else
         {
@@ -65,19 +63,15 @@ public class TreasureCube : MonoBehaviour
     {
         if (isCollected) return;
 
-        // Rotate the treasure
         transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
 
-        // Bob up and down using LOCAL position to maintain AR anchor
         float bobOffset = Mathf.Sin(Time.time * bobSpeed) * bobHeight;
         transform.localPosition = new Vector3(localStartPosition.x, localStartPosition.y + bobOffset, localStartPosition.z);
 
-        // Check distance to player
         if (arCamera != null)
         {
             float distance = Vector3.Distance(transform.position, arCamera.transform.position);
 
-            // Highlight when close
             if (distance <= highlightDistance && !isHighlighted)
             {
                 HighlightTreasure(true);
@@ -87,7 +81,6 @@ public class TreasureCube : MonoBehaviour
                 HighlightTreasure(false);
             }
 
-            // Auto-collect when very close
             if (distance <= collectionDistance)
             {
                 CollectTreasure();
@@ -104,7 +97,6 @@ public class TreasureCube : MonoBehaviour
             treasureRenderer.material = highlight ? highlightMaterial : normalMaterial;
         }
 
-        // Scale effect
         float targetScale = highlight ? 1.2f : 1f;
         StartCoroutine(ScaleTreasure(targetScale));
     }
@@ -132,19 +124,16 @@ public class TreasureCube : MonoBehaviour
 
         isCollected = true;
 
-        // Play sound
         if (audioSource != null && collectSound != null)
         {
             audioSource.PlayOneShot(collectSound);
         }
 
-        // Notify game manager
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnTreasureFound();
         }
 
-        // Animate collection
         StartCoroutine(CollectAnimation());
     }
 
@@ -168,7 +157,6 @@ public class TreasureCube : MonoBehaviour
         Destroy(gameObject);
     }
 
-    // Optional: Manual collection by tapping
     void OnMouseDown()
     {
         if (!isCollected)

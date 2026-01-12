@@ -64,7 +64,6 @@ public class TreasureTracker : MonoBehaviour
         
         foreach (TreasureCube treasure in treasures)
         {
-            // Only add treasures that haven't been collected yet
             if (treasure != null && !treasure.IsCollected)
             {
                 allTreasures.Add(treasure.gameObject);
@@ -103,21 +102,16 @@ public class TreasureTracker : MonoBehaviour
     {
         if (directionArrow == null || nearestTreasure == null) return;
 
-        // Calculate direction to treasure
         Vector3 directionToTreasure = nearestTreasure.transform.position - arCamera.transform.position;
-        directionToTreasure.y = 0; // Keep it horizontal
+        directionToTreasure.y = 0;
 
-        // Get camera forward direction (horizontal plane)
         Vector3 cameraForward = arCamera.transform.forward;
         cameraForward.y = 0;
 
-        // Calculate angle between camera forward and treasure direction
         float angle = Vector3.SignedAngle(cameraForward, directionToTreasure, Vector3.up);
 
-        // Rotate arrow
         directionArrow.transform.rotation = Quaternion.Euler(0, 0, -angle);
 
-        // Optional: Change arrow color based on distance
         float distance = Vector3.Distance(arCamera.transform.position, nearestTreasure.transform.position);
         if (distance < 2f)
         {

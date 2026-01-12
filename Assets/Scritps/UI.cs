@@ -7,13 +7,11 @@ public class UI : MonoBehaviour
 {
     public void StartGame()
     {
-        // Load scene 0 (game scene)
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 
     public void ExitGame()
     {
-        Debug.Log("Exiting game...");
         Application.Quit();
         
         #if UNITY_EDITOR
