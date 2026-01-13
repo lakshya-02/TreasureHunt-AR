@@ -1,12 +1,14 @@
-﻿# Treasure Hunt AR
+# Treasure Hunt AR
 
 An Augmented Reality treasure hunting game where players use their mobile device camera to discover and collect virtual treasures in the real world.
 
 ## Demo Video
 
-|  Gameplay Preview |  Project Info |
-|---------------------|-----------------|
-| https://github.com/user-attachments/assets/d249c44b-4a92-4d45-879c-76408e2000f6<br><br>*If video doesn't play, [download it here](Media/treasure_demo.mp4)* | **Platform:** Android<br>**Engine:** Unity 2022.3<br>**AR Framework:** AR Foundation 5.2.0<br>**Min Android:** 7.0 (API 24)<br>**File Size:** ~14 MB<br>**Duration:** Demo Gameplay |
+
+
+https://github.com/user-attachments/assets/6ceba10e-608b-464a-9af5-8ff9ff80822f
+
+
 
 ## Overview
 
