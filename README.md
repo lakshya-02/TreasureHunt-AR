@@ -46,25 +46,25 @@ Treasure Hunt AR is a mobile AR game built with Unity and AR Foundation that com
 
 ```
 Assets/
- Scenes/                    # Game scenes
-    MenuScene.unity       # Main menu
-    MainScene.unity       # AR gameplay scene
- Scripts/                   # All C# scripts organized by category
-    Managers/             # Core game management
+ Scenes/                  
+    MenuScene.unity       
+    MainScene.unity       
+ Scripts/                 
+    Managers/             
        GameManager.cs
        TreasureTracker.cs
-    AR/                   # AR-specific functionality
+    AR/                   
        ARTreasureSpawner.cs
-    Gameplay/             # Game mechanics
+    Gameplay/             
        TreasureCube.cs
-    Input/                # Input handling
+    Input/                
         TreasureInputHandler.cs
- Prefabs/                   # Reusable game objects
- Images/                    # UI sprites and textures
- Audio/                     # Sound effects and music
- TextMesh Pro/              # TMP assets and fonts
- UnityXRContent/            # XR starter assets
- XR/                        # XR plugin resources
+ Prefabs/                  
+ Images/                   
+ Audio/                    
+ TextMesh Pro/             
+ UnityXRContent/           
+ XR/                        
 ```
 
 ## Setup Instructions
