@@ -4,13 +4,9 @@ An Augmented Reality treasure hunting game where players use their mobile device
 
 ## Demo Video
 
-
-
-https://github.com/user-attachments/assets/d249c44b-4a92-4d45-879c-76408e2000f6
-
-
-
-*If video doesn't play, [download it here](Media/treasure_demo.mp4)*
+|  Gameplay Preview |  Project Info |
+|---------------------|-----------------|
+| https://github.com/user-attachments/assets/d249c44b-4a92-4d45-879c-76408e2000f6<br><br>*If video doesn't play, [download it here](Media/treasure_demo.mp4)* | **Platform:** Android<br>**Engine:** Unity 2022.3<br>**AR Framework:** AR Foundation 5.2.0<br>**Min Android:** 7.0 (API 24)<br>**File Size:** ~14 MB<br>**Duration:** Demo Gameplay |
 
 ## Overview
 
