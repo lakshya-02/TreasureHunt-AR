@@ -4,13 +4,7 @@ An Augmented Reality treasure hunting game where players use their mobile device
 
 ## Demo Video
 
-📹 **Demo video is available locally in the `Media/` folder**
-
-*To share the demo publicly, consider uploading to:*
-- YouTube
-- Google Drive
-- Vimeo
-- GitHub Releases
+📹 [Watch Demo Video](Media/treasure_demo.mp4)
 
 ## Overview
 
