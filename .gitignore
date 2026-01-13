@@ -103,3 +103,9 @@ InitTestScene*.unity*
 /[Aa]ssets/Images/
 .vscode/
 /md/
+
+# Large media files (videos)
+*.mp4
+*.mov
+*.avi
+Media/
