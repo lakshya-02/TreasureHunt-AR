@@ -44,31 +44,6 @@ Treasure Hunt AR is a mobile AR game built with Unity and AR Foundation that com
 - AR Foundation package
 - ARCore XR Plugin package
 
-## Project Structure
-
-```
-Assets/
- Scenes/                  
-    MenuScene.unity       
-    MainScene.unity       
- Scripts/                 
-    Managers/             
-       GameManager.cs
-       TreasureTracker.cs
-    AR/                   
-       ARTreasureSpawner.cs
-    Gameplay/             
-       TreasureCube.cs
-    Input/                
-        TreasureInputHandler.cs
- Prefabs/                  
- Images/                   
- Audio/                    
- TextMesh Pro/             
- UnityXRContent/           
- XR/                        
-```
-
 ## Setup Instructions
 
 ### 1. Clone Repository
